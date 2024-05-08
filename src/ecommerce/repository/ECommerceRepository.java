@@ -12,4 +12,7 @@ public interface ECommerceRepository {
 	public void atualizar(Produto produto);
 	public void deletarProduto(String id);
 	public void deletarCliente(String cpf);
+	public void adicionarCarrinho(String id);
+	public void visualizarCarrinho();
+	public void pagarCarrinho();
 }

@@ -2,7 +2,7 @@ package ecommerce.model;
 
 public abstract class Produto {
 
-	private float valorProduto;
+	private float valorProduto, valorTotal;
 	private String idProduto;
 	private String nomeProduto;
 	private String tipoProduto;
@@ -19,6 +19,14 @@ public abstract class Produto {
 	public Produto() {
 	}
 	
+	public float getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(float valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
 	public float getValorProduto() {
 		return valorProduto;
 	}

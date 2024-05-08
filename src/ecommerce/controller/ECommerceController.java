@@ -8,6 +8,7 @@ import ecommerce.repository.ECommerceRepository;
 
 public class ECommerceController implements ECommerceRepository{
 	
+	private ArrayList<Produto> listaCarrinho = new ArrayList<Produto>();
 	private ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
 	private ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
 	
@@ -91,7 +92,7 @@ public class ECommerceController implements ECommerceRepository{
 	
 	public Produto buscarNaCollectionProdutos(String id) {
 		for (var produto : listaProdutos) {
-			if (produto.getIdProduto() == id) {
+			if (produto.getIdProduto().equals(id)) {
 				return produto;
 			}
 		}
@@ -100,11 +101,37 @@ public class ECommerceController implements ECommerceRepository{
 	
 	public Cliente buscarNaCollectionClientes(String cpf) {
 		for (var cliente : listaClientes) {
-			if (cliente.getCpf() == cpf) {
+			if (cliente.getCpf().equals(cpf)) {
 				return cliente;
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void adicionarCarrinho(String id) {
+		var produto = buscarNaCollectionProdutos(id);
+		listaCarrinho.add(produto);
+	}
+
+	@Override
+	public void visualizarCarrinho() {
+		float valorTotal = 0;
+		
+		listaCarrinho.forEach(produto -> produto.visualizarDetalhesProduto());
+		
+        for(Produto produto : listaCarrinho) {
+        	valorTotal += produto.getValorProduto();
+        }
+        
+		System.out.println("Valor total: " + valorTotal);
+	}
+
+	@Override
+	public void pagarCarrinho() {
+		listaCarrinho.clear();
+		System.out.println("Carrinho pago com sucesso!");
+		
 	}
 
 	
