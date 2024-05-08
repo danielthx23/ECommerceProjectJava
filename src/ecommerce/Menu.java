@@ -3,6 +3,12 @@ package ecommerce;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import ecommerce.controller.ECommerceController;
+import ecommerce.model.Cliente;
+import ecommerce.model.Produto;
+import ecommerce.model.ProdutoDigital;
+import ecommerce.model.ProdutoFisico;
 import ecommerce.util.Cores;
 
 public class Menu {
@@ -11,7 +17,11 @@ public class Menu {
 
 		Scanner leia = new Scanner(System.in);
 
-		int opcao = 0;
+		ECommerceController loja = new ECommerceController();
+		float valorProduto;
+		int opcao = 0, anoDeNascimento, tipo = 0, quantidade, anoFabricacao;
+		String nomeCliente, cpfCliente, tipoPagamento, tipoProduto, idProduto, nomeProduto, especificacoes, serialChip, lote;
+
 
 		do {
 			System.out.println(Cores.TEXT_CYAN_BOLD + Cores.ANSI_BLACK_BACKGROUND
@@ -25,10 +35,12 @@ public class Menu {
 			System.out.println("            2 - Cadastrar novo produto               ");
 			System.out.println("            3 - Carrinho de produtos                 ");
 			System.out.println("            4 - Visualizar detalhes do produto       ");
-			System.out.println("            5 - Realizar pagamento                   ");
-			System.out.println("            6 - Visualizar histórico de pedidos      ");
-			System.out.println("            7 - Atualizar informações do cliente     ");
-			System.out.println("            8 - Sair                                 ");
+			System.out.println("            5 - Visualizar dados dos clientes        ");
+			System.out.println("            6 - Realizar pagamento                   ");
+			System.out.println("            7 - Deletar cliente                      ");
+			System.out.println("            8 - Deletar produto                      ");
+			System.out.println("            9 - Atualizar informações do cliente     ");
+			System.out.println("            10 - Sair                                ");
 			System.out.println("                                                     ");
 			System.out.println(Cores.TEXT_CYAN_BOLD + "*****************************************************");
 			System.out.print(Cores.TEXT_PURPLE_BOLD + "Entre com a opção desejada: ");
@@ -45,11 +57,58 @@ public class Menu {
 
 			switch (opcao) {
 			case 1:
-				System.out.println("Cadastrar cliente");
+				System.out.println(Cores.TEXT_RESET + "Criar cliente\n");
+
+				leia.nextLine();
+				System.out.println("Digite o nome do cliente: ");
+				nomeCliente = leia.nextLine();
+				System.out.println("Digite o CPF do cliente: ");
+				cpfCliente = leia.next();
+				System.out.println("Digite o tipo de pagamento do cliente: ");
+				tipoPagamento = leia.next();
+				System.out.println("Digite o ano de nascimento do cliente: ");
+				anoDeNascimento = leia.nextInt();
+
+				loja.cadastrarCliente(new Cliente(nomeCliente, cpfCliente, tipoPagamento, anoDeNascimento));
+
 				keyPress();
 				break;
 			case 2:
-				System.out.println("Cadastrar produto");
+				System.out.println(Cores.TEXT_RESET + "Cadastrar produto\n");
+				leia.nextLine();
+				System.out.println("Digite o nome do produto: ");
+				nomeProduto = leia.nextLine();
+				System.out.println("Digite o valor do produto: ");
+                valorProduto = leia.nextFloat();
+                System.out.println("Digite o ID do produto: ");
+                idProduto = leia.next();
+                System.out.println("Digite a quantidade do produto: ");
+                quantidade = leia.nextInt();
+                
+				do {
+					System.out.println("Digite o Tipo da Conta (1-Digital ou 2-Fisico): ");
+					tipo = leia.nextInt();
+				} while (tipo < 1 && tipo > 2);
+				switch (tipo) {
+
+				case 1 -> {
+					leia.nextLine();
+					System.out.println("Digite as especificações do produto: ");
+					especificacoes = leia.nextLine();
+					System.out.println("Digite as especificações do produto: ");
+					serialChip = leia.next();
+					loja.cadastrarProduto(new ProdutoDigital(valorProduto, idProduto, nomeProduto, "Digital", quantidade, especificacoes, serialChip));
+				}
+
+				case 2 -> {
+					System.out.println("Digite o lote do produto: ");
+					especificacoes = leia.next();
+					System.out.println("Digite o ano da fabricação do produto: ");
+					anoFabricacao = leia.nextInt();
+					loja.cadastrarProduto(new ProdutoFisico(valorProduto, idProduto, nomeProduto, "Fisico", quantidade, especificacoes, anoFabricacao));
+				}
+				}
+
 				keyPress();
 				break;
 			case 3:
@@ -57,39 +116,48 @@ public class Menu {
 				keyPress();
 				break;
 			case 4:
-				System.out.println("Visualizar");
+				System.out.println("\nListar todas os produtos");
+				loja.listarTodasProdutos();
 				keyPress();
 				break;
 			case 5:
-				System.out.println("Pagamento");
+				System.out.println("\nListar todas os clientes");
+				loja.listarTodosCliente();
 				keyPress();
 				break;
 			case 6:
-				System.out.println("Histórico");
+				System.out.println("Pagar");
 				keyPress();
 				break;
 			case 7:
-				System.out.println("Atualizar");
+				System.out.println("Deletar cliente");
 				keyPress();
 				break;
 			case 8:
+				System.out.println("Deletar produto");
+				keyPress();
+				break;
+			case 9:
+				System.out.println("Atualizar");
+				keyPress();
+				break;
+			case 10:
 				sobre();
 				leia.close();
 				System.exit(0);
-				keyPress();
 				break;
-				
 			default:
 				System.err.println("\nOpção Inválida!\n" + Cores.TEXT_RESET);
 
 				keyPress();
 				break;
 			}
-		} while (opcao != 8);
+		} while (opcao != 9);
 	}
 
 	public static void sobre() {
-		System.out.println(Cores.ANSI_BLACK_BACKGROUND + Cores.TEXT_WHITE_BOLD + "\n*********************************************************");
+		System.out.println(Cores.ANSI_BLACK_BACKGROUND + Cores.TEXT_WHITE_BOLD
+				+ "\n*********************************************************");
 		System.out.println("Projeto Desenvolvido por:                                ");
 		System.out.println("Daniel Saburo Akiyama - danielakiyama8@gmail.com         ");
 		System.out.println("https://github.com/danielthx23                           ");
